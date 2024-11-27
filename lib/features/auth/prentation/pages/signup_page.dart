@@ -1,10 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_green/core/theme/app_palette.dart';
 import 'package:go_green/features/auth/prentation/bloc/auth_bloc.dart';
+import 'package:go_green/features/auth/prentation/pages/home_page.dart';
 import 'package:go_green/features/auth/prentation/pages/login_page.dart';
 import 'package:go_green/features/auth/prentation/pages/widgets/auth_field.dart';
 import 'package:go_green/features/auth/prentation/pages/widgets/auth_gradient_button.dart';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_green/main.dart';
+import 'package:go_green/features/auth/app_auth_context.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -66,15 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 20),
               AuthGradientButton(
                 buttonText: 'Sign Up',
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    context.read<AuthBloc>().add(AuthSignUp(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                          name: nameController.text.trim(),
-                        ));
-                  }
-                },
+                onPressed: handleSignup,
               ),
               const SizedBox(
                 height: 20,
@@ -106,6 +105,15 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
+    );
+  }
+  Future<void> handleSignup() async {
+    final AuthResponse res = await supabase.auth.signUp(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+      data: {
+        "username": nameController.text.trim(),
+      }
     );
   }
 }

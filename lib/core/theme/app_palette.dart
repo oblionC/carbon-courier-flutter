@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppPallete {
-  static const Color backgroundColor = Color.fromARGB(255, 245, 245, 220);
+  static const Color backgroundColor = Color.fromARGB(255, 230, 230, 220);
   static const Color gradient1 = Color.fromARGB(255, 34, 139, 34);
   static const Color gradient2 = Color.fromARGB(255, 255, 255, 255);
   static const Color gradient3 = Color.fromRGBO(255, 159, 124, 1);

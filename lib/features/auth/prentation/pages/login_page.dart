@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_green/core/theme/app_palette.dart';
+import 'package:go_green/features/auth/prentation/pages/app_page.dart';
 import 'package:go_green/features/auth/prentation/pages/signup_page.dart';
 import 'package:go_green/features/auth/prentation/pages/widgets/auth_field.dart';
 import 'package:go_green/features/auth/prentation/pages/widgets/auth_gradient_button.dart';
+import 'package:go_green/main.dart';
+import 'package:go_green/features/auth/app_auth_context.dart';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => const LoginPage());
@@ -60,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               AuthGradientButton(
                 buttonText: 'Sign In',
-                onPressed: () {},
+                onPressed: handleLogin,
               ),
               const SizedBox(
                 height: 20,
@@ -96,5 +100,18 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+  Future<void> handleLogin() async {
+    try{
+      final response = await supabase.auth.signInWithPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      AppAuthContext.login(response.session?.accessToken, response.user?.id, response.user?.userMetadata?["username"]);
+      Navigator.pushReplacement(context, AppPage.route());
+    }
+    catch (e) {
+      print(e);
+    }
   }
 }
